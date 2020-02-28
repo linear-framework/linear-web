@@ -1,6 +1,5 @@
 package com.linearframework.web
 
-import com.linearframework.web.HttpStatus.NOT_FOUND
 import com.linearframework.web.internal.ServerRegistrant
 import spark.Spark
 

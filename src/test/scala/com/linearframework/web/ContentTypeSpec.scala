@@ -3,7 +3,6 @@ package com.linearframework.web
 import com.linearframework.BaseSpec
 
 class ContentTypeSpec extends BaseSpec {
-  import ContentType._
 
   "Content Types" should "be convertible to case objects" in {
     ContentType("application/json") should be (JSON)

@@ -1,7 +1,5 @@
 package com.linearframework.web.internal
 
-import com.linearframework.web.ContentType.HTML
-import com.linearframework.web.HttpStatus.NOT_FOUND
 import com.linearframework.web._
 
 private[web] object DefaultNotFoundHandler extends NotFoundHandler {

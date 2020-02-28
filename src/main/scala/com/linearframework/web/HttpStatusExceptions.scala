@@ -1,7 +1,5 @@
 package com.linearframework.web
 
-import HttpStatus._
-
 class HttpStatusException(val status: HttpStatus, message: String, cause: Throwable = null) extends RuntimeException(message, cause)
 
 class BadRequestException(message: String = BAD_REQUEST.reason, cause: Throwable = null) extends HttpStatusException(BAD_REQUEST, message, cause)

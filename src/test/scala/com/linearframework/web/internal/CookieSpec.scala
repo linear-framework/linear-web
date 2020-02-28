@@ -2,7 +2,7 @@ package com.linearframework.web.internal
 
 import com.linearframework.BaseSpec
 import com.linearframework.web.SameSite
-import java.time.{LocalDateTime, ZonedDateTime}
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class CookieSpec extends BaseSpec {

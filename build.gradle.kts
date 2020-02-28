@@ -7,6 +7,11 @@ plugins {
 group = "com.linearframework"
 version = "0.1.1-SNAPSHOT"
 
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 repositories {
   jcenter()
   mavenCentral()
@@ -22,6 +27,8 @@ dependencies {
   testImplementation("junit:junit:4.13")
   testImplementation("org.scalatest:scalatest_2.13:3.1.1")
   testImplementation("org.scalatestplus:junit-4-12_2.13:3.1.1.0")
+
+  testRuntimeOnly("org.slf4j:slf4j-simple:1.7.25")
 }
 
 tasks.named<Jar>("jar") {

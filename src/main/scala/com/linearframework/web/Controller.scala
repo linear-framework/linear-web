@@ -1,6 +1,5 @@
 package com.linearframework.web
 
-import com.linearframework.web.HttpVerb._
 import com.linearframework.web.internal.ServerRegistrant
 import spark.Spark
 import scala.collection.mutable
