@@ -14,8 +14,10 @@ repositories {
 
 dependencies {
   implementation("org.scala-lang:scala-library:2.13.1")
+  implementation("org.scala-lang:scala-reflect:2.13.1")
 
   api("com.sparkjava:spark-core:2.9.1")
+  api("org.reflections:reflections:0.9.11")
 
   testImplementation("junit:junit:4.13")
   testImplementation("org.scalatest:scalatest_2.13:3.1.1")
