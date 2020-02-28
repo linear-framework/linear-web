@@ -7,9 +7,5 @@ import com.linearframework.web.internal.ServerRegistrant
  */
 trait Component extends ServerRegistrant {
 
-  abstract override private[web] def register(): Unit = {
-
-  }
-
 }
 

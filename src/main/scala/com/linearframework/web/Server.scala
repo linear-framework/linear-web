@@ -164,7 +164,7 @@ trait Server {
     registerFilters()
     registerExceptionHandlers()
     registerControllers()
-//    register404Handler()
+    register404Handler()
     registerComponents()
 
     Spark.init()
@@ -281,22 +281,22 @@ trait Server {
     logTable(Seq("EXCEPTION TYPE", "HANDLER"), registered)
   }
 
-//  private def register404Handler(): Unit = {
-//    val handlers = Utils.findScalaObjects[NotFoundHandler](autoScanPackage)
-//    var handler: NotFoundHandler = DefaultNotFoundHandler
-//    if (handlers.length > 1) {
-//      throw new IllegalStateException("Multiple NotFoundHandlers are present in the scope of this server")
-//    }
-//    else if (handlers.length == 1) {
-//      handler = handlers.head
-//    }
-//
-//    handler.setServer(this)
-//    handler.register()
-//
-//    log.info(s"Registered 404 Handler:")
-//    logTable(Seq("HANDLER"), Seq(Seq(s"${handler.getClass.getName.replaceAllLiterally("$", "")}")))
-//  }
+  private def register404Handler(): Unit = {
+    val handlers = Utils.findScalaObjects[NotFoundHandler](autoScanPackage)
+    var handler: NotFoundHandler = DefaultNotFoundHandler
+    if (handlers.length > 1) {
+      throw new IllegalStateException("Multiple NotFoundHandlers are present in the scope of this server")
+    }
+    else if (handlers.length == 1) {
+      handler = handlers.head
+    }
+
+    handler.setServer(this)
+    handler.register()
+
+    log.info(s"Registered 404 Handler:")
+    logTable(Seq("HANDLER"), Seq(Seq(s"${handler.getClass.getName.replaceAllLiterally("$", "")}")))
+  }
 
   private def registerComponents(): Unit = {
     val components = Utils.findScalaObjects[Component](autoScanPackage)

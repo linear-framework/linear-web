@@ -11,7 +11,9 @@ private[web] trait ServerRegistrant {
     this.server = server
   }
 
-  private[web] def register(): Unit
+  private[web] def register(): Unit = {
+    // no-op for abstract overrides
+  }
 
   /**
    * Fetches all objects that have been registered with the server
