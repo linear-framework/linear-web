@@ -32,7 +32,7 @@ object Server {
     private val corsOrigin: Option[String] = None,
     private val logRequests: Boolean = false,
     private val staticFiles: Option[StaticFilesConfiguration] = None,
-//    private val ssl: Option[SslConfiguration] = None,
+    private val ssl: Option[SslConfiguration] = None,
     private val registry: util.Map[Class[_], util.Set[_]] = new util.HashMap[Class[_], util.Set[_]](),
     private val startupHook: () => Unit = () => { }
   ) {
@@ -73,15 +73,15 @@ object Server {
       this.copy(staticFiles = Some(StaticFilesConfiguration(from, path)))
     }
 
-//    /**
-//     * Enables SSL over HTTPS
-//     */
-//    def secure(keystoreFilePath: String, keystorePassword: String, truststoreFilePath: String, truststorePassword: String): ServerConfiguration = {
-//      this.copy(
-//        scheme = "https",
-//        ssl = Some(SslConfiguration(keystoreFilePath, keystorePassword, truststoreFilePath, truststorePassword))
-//      )
-//    }
+    /**
+     * Enables SSL over HTTPS
+     */
+    def secure(keystoreFilePath: String, keystorePassword: String, truststoreFilePath: String, truststorePassword: String): ServerConfiguration = {
+      this.copy(
+        scheme = "https",
+        ssl = Some(SslConfiguration(keystoreFilePath, keystorePassword, truststoreFilePath, truststorePassword))
+      )
+    }
 
     /**
      * Registers an object with the server under a parent class.
@@ -129,7 +129,7 @@ object Server {
           override protected val corsAllowedOrigin: Option[String] = conf.corsOrigin
           override protected val logRequests: Boolean = conf.logRequests
           override protected val staticFiles: Option[StaticFilesConfiguration] = conf.staticFiles
-//          override protected val ssl: Option[SslConfiguration] = conf.ssl
+          override protected val ssl: Option[SslConfiguration] = conf.ssl
           override private[web] val registry = conf.registry
         }
       server.start()
@@ -151,7 +151,7 @@ trait Server {
   protected val corsAllowedOrigin: Option[String]
   protected val logRequests: Boolean
   protected val staticFiles: Option[StaticFilesConfiguration]
-//  protected val ssl: Option[SslConfiguration]
+  protected val ssl: Option[SslConfiguration]
   private[web] val registry: util.Map[Class[_], util.Set[_]]
 
   /**
@@ -187,11 +187,11 @@ trait Server {
   private def applyServerSettings(): Unit = {
     Spark.port(port)
 
-//    if (ssl.isDefined) {
-//      log.info("Enabling SSL over HTTPS")
-//      val config = ssl.get
-//      Spark.secure(config.keystoreFilePath, config.keystorePassword, config.truststoreFilePath, config.truststorePassword)
-//    }
+    if (ssl.isDefined) {
+      log.info("Enabling SSL over HTTPS")
+      val config = ssl.get
+      Spark.secure(config.keystoreFilePath, config.keystorePassword, config.truststoreFilePath, config.truststorePassword)
+    }
 
     if (staticFiles.isDefined) {
       log.info("Serving Static Files:")
