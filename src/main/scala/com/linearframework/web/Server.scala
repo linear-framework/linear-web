@@ -163,7 +163,7 @@ trait Server {
     applyServerSettings()
 //    registerFilters()
 //    registerExceptionHandlers()
-//    registerControllers()
+    registerControllers()
 //    register404Handler()
 //    registerComponents()
 
@@ -206,38 +206,30 @@ trait Server {
     }
   }
 
-//  private def registerControllers(): Unit = {
-//    var controllers = Utils.findScalaObjects[Controller](autoScanPackage)
-//
+  private def registerControllers(): Unit = {
+    var controllers = Utils.findScalaObjects[Controller](autoScanPackage)
+
 //    if (corsAllowedOrigin.isDefined) {
 //      controllers = controllers :+ CorsController
 //    }
-//
-//    val endpoints =
-//      controllers
-//        .flatMap(controller => {
-//          controller.setServer(this)
-//          controller.register()
-//          controller.endpointRegistry.map { endpoint =>
-//            endpoint.documentation ->
-//              Seq(
-//                endpoint.method.toString,
-//                endpoint.path,
-//                controller.getClass.getName.replaceAllLiterally("$", "")
-//              )
-//          }
-//        })
-//
-//    val documentation = endpoints.flatMap(_._1).toList
-//    var descriptions = endpoints.map(_._2)
-//
-//    if (openApi.isDefined) {
-//      descriptions = descriptions ++ enableOpenApi(documentation)
-//    }
-//
-//    log.info("Registered Endpoints:")
-//    logTable(Seq("METHOD", "PATH", "CLASS"), descriptions)
-//  }
+
+    val endpoints =
+      controllers
+        .flatMap(controller => {
+          controller.setServer(this)
+          controller.register()
+          controller.endpointRegistry.map { endpoint =>
+            Seq(
+              endpoint.method.toString,
+              endpoint.path,
+              controller.getClass.getName.replaceAllLiterally("$", "")
+            )
+          }
+        })
+
+    log.info("Registered Endpoints:")
+    logTable(Seq("METHOD", "PATH", "CLASS"), endpoints)
+  }
 
 //  private def registerFilters(): Unit = {
 //    var filters = Utils.findScalaObjects[Filter](autoScanPackage)
