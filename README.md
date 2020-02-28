@@ -11,7 +11,7 @@ import com.linearframework.web._
 
 object App {
   def main(args: Array[String]): Unit = {
-    Server.autoScan("com.example")
+    Server.autoScan("com.example").start()
   }
 }
 
