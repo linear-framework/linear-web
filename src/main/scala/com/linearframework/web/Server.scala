@@ -209,9 +209,9 @@ trait Server {
   private def registerControllers(): Unit = {
     var controllers = Utils.findScalaObjects[Controller](autoScanPackage)
 
-//    if (corsAllowedOrigin.isDefined) {
-//      controllers = controllers :+ CorsController
-//    }
+    if (corsAllowedOrigin.isDefined) {
+      controllers = controllers :+ CorsController
+    }
 
     val endpoints =
       controllers
@@ -234,14 +234,14 @@ trait Server {
   private def registerFilters(): Unit = {
     var filters = Utils.findScalaObjects[Filter](autoScanPackage)
 
-//    if (corsAllowedOrigin.isDefined) {
-//      // CORS filter must be registered before all other filters
-//      filters = Seq(new CorsFilter(corsAllowedOrigin.get)) ++ filters
-//    }
+    if (corsAllowedOrigin.isDefined) {
+      // CORS filter must be registered before all other filters
+      filters = Seq(new CorsFilter(corsAllowedOrigin.get)) ++ filters
+    }
 
-//    if (logRequests) {
-//      filters = filters :+ RequestLogger
-//    }
+    if (logRequests) {
+      filters = filters :+ RequestLogger
+    }
 
     val registered =
       filters.flatMap(filter => {
@@ -263,9 +263,9 @@ trait Server {
   private def registerExceptionHandlers(): Unit = {
     var handlers = Utils.findScalaObjects[ExceptionHandler[_]](autoScanPackage)
 
-//    if (!handlers.exists(_.exceptionClass == classOf[Exception])) {
-//      handlers = handlers :+ DefaultExceptionHandler
-//    }
+    if (!handlers.exists(_.exceptionClass == classOf[Exception])) {
+      handlers = handlers :+ DefaultExceptionHandler
+    }
 
     val registered =
       handlers.map(handler => {
