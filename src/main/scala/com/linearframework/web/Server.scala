@@ -165,7 +165,7 @@ trait Server {
 //    registerExceptionHandlers()
     registerControllers()
 //    register404Handler()
-//    registerComponents()
+    registerComponents()
 
     Spark.init()
     Spark.awaitInitialization()
@@ -298,21 +298,21 @@ trait Server {
 //    logTable(Seq("HANDLER"), Seq(Seq(s"${handler.getClass.getName.replaceAllLiterally("$", "")}")))
 //  }
 
-//  private def registerComponents(): Unit = {
-//    var components = Utils.findScalaObjects[Component](autoScanPackage)
-//
-//    val registered =
-//      components.map(component => {
-//        component.setServer(this)
-//        component.register()
-//        Seq(
-//          component.getClass.getName.replaceAllLiterally("$", "")
-//        )
-//      })
-//
-//    log.info("Registered Components:")
-//    logTable(Seq("COMPONENT"), registered)
-//  }
+  private def registerComponents(): Unit = {
+    val components = Utils.findScalaObjects[Component](autoScanPackage)
+
+    val registered =
+      components.map(component => {
+        component.setServer(this)
+        component.register()
+        Seq(
+          component.getClass.getName.replaceAllLiterally("$", "")
+        )
+      })
+
+    log.info("Registered Components:")
+    logTable(Seq("COMPONENT"), registered)
+  }
 
   /**
    * Lifecycle hook which enables the execution of arbitrary code after the
