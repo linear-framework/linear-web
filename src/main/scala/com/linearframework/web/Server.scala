@@ -197,7 +197,7 @@ trait Server {
       log.info("Serving Static Files:")
       val config = staticFiles.get
       logTable(Seq("LOCATION", "PATH"), Seq(Seq(config.location.toString, config.path)))
-      if (config.location == StaticFileLocation.EXTERNAL) {
+      if (config.location == EXTERNAL) {
         Spark.staticFiles.externalLocation(config.path)
       }
       else {

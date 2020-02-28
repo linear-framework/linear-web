@@ -5,11 +5,9 @@ package com.linearframework.web
  */
 sealed trait StaticFileLocation
 
-object StaticFileLocation {
-  /** Indicates that static files should be served from the classpath */
-  case object CLASSPATH extends StaticFileLocation
+/** Indicates that static files should be served from the classpath */
+case object CLASSPATH extends StaticFileLocation
 
-  /** Indicates that static files should be served from the external file system */
-  case object EXTERNAL extends StaticFileLocation
-}
+/** Indicates that static files should be served from the external file system */
+case object EXTERNAL extends StaticFileLocation
 
