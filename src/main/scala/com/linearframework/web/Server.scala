@@ -162,7 +162,7 @@ trait Server {
 
     applyServerSettings()
     registerFilters()
-//    registerExceptionHandlers()
+    registerExceptionHandlers()
     registerControllers()
 //    register404Handler()
     registerComponents()
@@ -260,26 +260,26 @@ trait Server {
     logTable(Seq("METHOD", "PATH", "CLASS"), registered)
   }
 
-//  private def registerExceptionHandlers(): Unit = {
-//    var handlers = Utils.findScalaObjects[ExceptionHandler[_]](autoScanPackage)
-//
+  private def registerExceptionHandlers(): Unit = {
+    var handlers = Utils.findScalaObjects[ExceptionHandler[_]](autoScanPackage)
+
 //    if (!handlers.exists(_.exceptionClass == classOf[Exception])) {
 //      handlers = handlers :+ DefaultExceptionHandler
 //    }
-//
-//    val registered =
-//      handlers.map(handler => {
-//        handler.setServer(this)
-//        handler.register()
-//        Seq(
-//          handler.exceptionClass.getName.replaceAllLiterally("$", ""),
-//          handler.getClass.getName.replaceAllLiterally("$", "")
-//        )
-//      })
-//
-//    log.info("Registered Exception Handlers:")
-//    logTable(Seq("EXCEPTION TYPE", "HANDLER"), registered)
-//  }
+
+    val registered =
+      handlers.map(handler => {
+        handler.setServer(this)
+        handler.register()
+        Seq(
+          handler.exceptionClass.getName.replaceAllLiterally("$", ""),
+          handler.getClass.getName.replaceAllLiterally("$", "")
+        )
+      })
+
+    log.info("Registered Exception Handlers:")
+    logTable(Seq("EXCEPTION TYPE", "HANDLER"), registered)
+  }
 
 //  private def register404Handler(): Unit = {
 //    val handlers = Utils.findScalaObjects[NotFoundHandler](autoScanPackage)
