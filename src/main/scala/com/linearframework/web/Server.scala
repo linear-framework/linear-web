@@ -161,7 +161,7 @@ trait Server {
     log.info("Starting web server...")
 
     applyServerSettings()
-//    registerFilters()
+    registerFilters()
 //    registerExceptionHandlers()
     registerControllers()
 //    register404Handler()
@@ -231,34 +231,34 @@ trait Server {
     logTable(Seq("METHOD", "PATH", "CLASS"), endpoints)
   }
 
-//  private def registerFilters(): Unit = {
-//    var filters = Utils.findScalaObjects[Filter](autoScanPackage)
-//
+  private def registerFilters(): Unit = {
+    var filters = Utils.findScalaObjects[Filter](autoScanPackage)
+
 //    if (corsAllowedOrigin.isDefined) {
 //      // CORS filter must be registered before all other filters
 //      filters = Seq(new CorsFilter(corsAllowedOrigin.get)) ++ filters
 //    }
-//
+
 //    if (logRequests) {
 //      filters = filters :+ RequestLogger
 //    }
-//
-//    val registered =
-//      filters.flatMap(filter => {
-//        filter.setServer(this)
-//        filter.register()
-//        filter.filterRegistry.map { method =>
-//          Seq(
-//            method.method.toString,
-//            if (method.path == SparkUtils.ALL_PATHS) "*" else method.path,
-//            filter.getClass.getName.replaceAllLiterally("$", "")
-//          )
-//        }
-//      })
-//
-//    log.info("Registered Filters:")
-//    logTable(Seq("METHOD", "PATH", "CLASS"), registered)
-//  }
+
+    val registered =
+      filters.flatMap(filter => {
+        filter.setServer(this)
+        filter.register()
+        filter.filterRegistry.map { method =>
+          Seq(
+            method.method.toString,
+            if (method.path == SparkUtils.ALL_PATHS) "*" else method.path,
+            filter.getClass.getName.replaceAllLiterally("$", "")
+          )
+        }
+      })
+
+    log.info("Registered Filters:")
+    logTable(Seq("METHOD", "PATH", "CLASS"), registered)
+  }
 
 //  private def registerExceptionHandlers(): Unit = {
 //    var handlers = Utils.findScalaObjects[ExceptionHandler[_]](autoScanPackage)
