@@ -45,9 +45,10 @@ trait Controller extends ServerRegistrant {
   }
 
   protected implicit class MethodImplicits(verb: HttpVerb) {
-    def apply[T <: AnyRef](path: String)(handler: (Request, Response) => T)(implicit transformer: ResponseTransformer = (result, _) => result): Unit = {
+    def apply[T <: AnyRef](path: String)(handler: (Request, Response) => T)(implicit transformer: ResponseTransformer = (result, _) => result): WebMethod = {
       val endpoint = new Endpoint(verb, path, handler, transformer)
       endpointRegistry += endpoint
+      new WebMethod()
     }
   }
 
