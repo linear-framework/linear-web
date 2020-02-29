@@ -27,7 +27,8 @@ trait Controller extends ServerRegistrant {
   private[web] class Endpoint[T <: AnyRef](
     val method: HttpVerb,
     val path: String,
-    val handler: (Request, Response) => T
+    val handler: (Request, Response) => T,
+    val transformer: ResponseTransformer
   ) {
     override def hashCode(): Int = {
       s"$method $path".hashCode
@@ -44,8 +45,8 @@ trait Controller extends ServerRegistrant {
   }
 
   protected implicit class MethodImplicits(verb: HttpVerb) {
-    def apply[T <: AnyRef](path: String)(handler: (Request, Response) => T): Unit = {
-      val endpoint = new Endpoint(verb, path, handler)
+    def apply[T <: AnyRef](path: String)(handler: (Request, Response) => T)(implicit transformer: ResponseTransformer = (result, _) => result): Unit = {
+      val endpoint = new Endpoint(verb, path, handler, transformer)
       endpointRegistry += endpoint
     }
   }
@@ -56,7 +57,8 @@ trait Controller extends ServerRegistrant {
       val route: spark.Route = (request: spark.Request, response: spark.Response) => {
         val req = new RequestImpl(request)
         val res = new ResponseImpl(response)
-        endpoint.handler(req, res).asInstanceOf[AnyRef]
+        val result = endpoint.handler(req, res).asInstanceOf[AnyRef]
+        endpoint.transformer(result, res)
       }
 
       endpoint.method match {

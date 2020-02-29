@@ -25,4 +25,9 @@ class DefaultsSpec extends RestSpec {
     get("http://localhost:4567/registered/all").body should be("")
     get("http://localhost:4567/registered/one").body should be("")
   }
+
+  "Response Transformers" can "re-write endpoint results" in {
+    val response = get("http://localhost:4567/hola")
+    response.body should be ("hola")
+  }
 }

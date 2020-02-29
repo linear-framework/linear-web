@@ -11,6 +11,12 @@ object HelloController extends Controller {
     "hello"
   }
 
+  GET("/hola") { (_, _) =>
+    "hello"
+  } { (_, _) =>
+    "hola"
+  }
+
   GET("/error") { (_, _) =>
     throw new RuntimeException("Oops!")
   }

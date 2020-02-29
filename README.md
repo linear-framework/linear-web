@@ -118,6 +118,46 @@ more granular control over how the response is built, you can manipulate `respon
 
 Reminder: for auto-configuration to work, all `Controller` implementations must be top-level Scala objects.
 
+#### Response Transformers
+A `ResponseTransformer` handles generically converting the return value of an endpoint (e.g., converting the value to JSON).
+
+`ResponseTransformer`s can either be applied to each invidual endpoint:
+
+```scala
+import com.linearframework.web._
+
+object UserController extends Controller {
+  private val toJson: ResponseTransformer = { (result, response) => 
+    response.setContentType(JSON)
+    new Gson().toJson(result)
+  }
+
+  GET("/api/user/:userId") { (request, response) =>
+    val userId = request.getPathParam("userId")
+    val user = UserService.findUser(userId)
+    user
+  } { toJson }
+}
+``` 
+
+Or implicitly defined for all endpoints in a controller:
+
+```scala
+import com.linearframework.web._
+
+object UserController extends Controller {
+  implicit private val toJson: ResponseTransformer = { (result, response) => 
+    response.setContentType(JSON)
+    new Gson().toJson(result)
+  }
+
+  GET("/api/user/:userId") { (request, response) =>
+    val userId = request.getPathParam("userId")
+    val user = UserService.findUser(userId)
+    user
+  }
+}
+``` 
 
 ### Filters
 `Filter`s contain logic that is applied to every request.  A filter is made up of three pieces:

@@ -1,7 +1,6 @@
 package com.linearframework.web.serverConfig
 
-import com.linearframework.web.RestSpec
-import com.linearframework.web._
+import com.linearframework.web.{RestSpec, _}
 
 class RegistrySpec extends RestSpec {
 

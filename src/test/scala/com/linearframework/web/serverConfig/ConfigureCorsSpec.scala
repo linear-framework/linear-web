@@ -1,7 +1,6 @@
 package com.linearframework.web.serverConfig
 
-import com.linearframework.web.RestSpec
-import com.linearframework.web.Server
+import com.linearframework.web.{RestSpec, Server}
 import com.linearframework.web.Server._
 
 class ConfigureCorsSpec extends RestSpec {
