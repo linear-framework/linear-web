@@ -25,19 +25,17 @@ trait Controller extends ServerRegistrant {
   private[web] val endpointRegistry = mutable.Set[Endpoint[_]]()
 
   private[web] class Endpoint[T <: AnyRef](
-    val method: HttpVerb,
-    val path: String,
+    val webMethod: WebMethod,
     val handler: (Request, Response) => T,
     val transformer: ResponseTransformer
   ) {
     override def hashCode(): Int = {
-      s"$method $path".hashCode
+      webMethod.hashCode
     }
     override def equals(obj: Any): Boolean = {
       obj match {
         case that: Endpoint[T] =>
-          this.method == that.method &&
-            this.path == that.path
+          this.webMethod == that.webMethod
         case _ =>
           false
       }
@@ -46,9 +44,10 @@ trait Controller extends ServerRegistrant {
 
   protected implicit class MethodImplicits(verb: HttpVerb) {
     def apply[T <: AnyRef](path: String)(handler: (Request, Response) => T)(implicit transformer: ResponseTransformer = (result, _) => result): WebMethod = {
-      val endpoint = new Endpoint(verb, path, handler, transformer)
+      val webMethod = WebMethod(verb, path)
+      val endpoint = new Endpoint(webMethod, handler, transformer)
       endpointRegistry += endpoint
-      new WebMethod()
+      webMethod
     }
   }
 
@@ -62,15 +61,15 @@ trait Controller extends ServerRegistrant {
         endpoint.transformer(result, res)
       }
 
-      endpoint.method match {
-        case GET => Spark.get(endpoint.path, route)
-        case POST => Spark.post(endpoint.path, route)
-        case PUT => Spark.put(endpoint.path, route)
-        case DELETE => Spark.delete(endpoint.path, route)
-        case HEAD => Spark.head(endpoint.path, route)
-        case TRACE => Spark.trace(endpoint.path, route)
-        case CONNECT => Spark.connect(endpoint.path, route)
-        case OPTIONS => Spark.options(endpoint.path, route)
+      endpoint.webMethod.method match {
+        case GET => Spark.get(endpoint.webMethod.path, route)
+        case POST => Spark.post(endpoint.webMethod.path, route)
+        case PUT => Spark.put(endpoint.webMethod.path, route)
+        case DELETE => Spark.delete(endpoint.webMethod.path, route)
+        case HEAD => Spark.head(endpoint.webMethod.path, route)
+        case TRACE => Spark.trace(endpoint.webMethod.path, route)
+        case CONNECT => Spark.connect(endpoint.webMethod.path, route)
+        case OPTIONS => Spark.options(endpoint.webMethod.path, route)
       }
     }
   }

@@ -1,7 +1,7 @@
 package com.linearframework.web
 
 class ResponseTransformerSpec extends RestSpec {
-  override protected val conf: Server.ServerConfiguration = Server.autoScan("com.linearframework.json")
+  override protected val conf: Server.Configuration = Server.autoScan("com.linearframework.json")
 
   "Response transformers" should "be applied implicitly" in {
     val result = get("http://localhost:4567/people")

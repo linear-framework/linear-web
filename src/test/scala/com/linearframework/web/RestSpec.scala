@@ -1,7 +1,6 @@
 package com.linearframework.web
 
 import com.linearframework.BaseSpec
-import com.linearframework.web.Server.ServerConfiguration
 import javax.net.ssl.HttpsURLConnection
 import java.io.InputStream
 import java.net.{HttpURLConnection, URL}
@@ -12,7 +11,7 @@ import scala.jdk.CollectionConverters._
 abstract class RestSpec extends BaseSpec {
 
   protected var server: Server = _
-  protected val conf: ServerConfiguration
+  protected val conf: Server.Configuration
 
   override protected def beforeAll(): Unit = {
     server = conf.start()

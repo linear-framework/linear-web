@@ -10,9 +10,9 @@ class ExternalStaticFilesSpec extends RestSpec {
     file.getAbsolutePath.replaceAll("index.html", "")
   }
 
-  override protected val conf: Server.ServerConfiguration =
+  override protected val conf: Server.Configuration =
     Server
-      .autoScan("hello")
+      .autoScan("com.linearframework.hello")
       .staticFiles(EXTERNAL, path)
 
   "Static file hosting" should "be supported with external resources" in {

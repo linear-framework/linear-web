@@ -3,9 +3,9 @@ package com.linearframework.web.serverConfig
 import com.linearframework.web._
 
 class ClasspathStaticFilesSpec extends RestSpec {
-  override protected val conf: Server.ServerConfiguration =
+  override protected val conf: Server.Configuration =
     Server
-      .autoScan("hello")
+      .autoScan("com.linearframework.hello")
       .staticFiles(CLASSPATH, "public/")
 
   "Static file hosting" should "be supported with classpath resources" in {

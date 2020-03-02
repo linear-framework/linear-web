@@ -1,8 +1,6 @@
 package com.linearframework.web
 
 /**
- * This exists for extensibility purposes only.
+ * Represents an endpoint in the web server
  */
-final class WebMethod private[web]() {
-
-}
+case class WebMethod private[web](method: HttpVerb, path: String)

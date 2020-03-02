@@ -1,11 +1,10 @@
 package com.linearframework.web.serverConfig
 
 import com.linearframework.web.{RestSpec, Server}
-import com.linearframework.web.Server._
 
 class ConfigureCorsSpec extends RestSpec {
 
-  override protected val conf: ServerConfiguration =
+  override protected val conf: Server.Configuration =
     Server
       .autoScan("com.linearframework.hello")
       .corsOrigin("my-origin")

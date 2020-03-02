@@ -5,7 +5,6 @@ import org.slf4j.{Logger, LoggerFactory}
 import spark.Spark
 import spark.utils.SparkUtils
 import java.util
-import scala.reflect.ClassTag
 
 /**
  * Convenience methods for configuring and starting a [[com.linearframework.web.Server]].
@@ -17,109 +16,19 @@ object Server {
    * Components in the given package
    * @param pkg the package to scan for server components
    */
-  def autoScan(pkg: String): ServerConfiguration = {
-    ServerConfiguration(pkg)
+  def autoScan(pkg: String): Configuration = {
+    Configuration(pkg)
   }
 
   /**
    * Configures a new Server instance
    */
-  case class ServerConfiguration(
-    private val autoScan: String,
-    private val scheme: String = "http",
-    private val host: String = "localhost",
-    private val port: Int = 4567,
-    private val corsOrigin: Option[String] = None,
-    private val logRequests: Boolean = false,
-    private val staticFiles: Option[StaticFilesConfiguration] = None,
-    private val ssl: Option[SslConfiguration] = None,
-    private val registry: util.Map[Class[_], util.Set[_]] = new util.HashMap[Class[_], util.Set[_]](),
-    private val startupHook: () => Unit = () => { }
-  ) {
-    private val conf = this
+  case class Configuration(
+    override val autoScan: String
+  ) extends ServerConfiguration(autoScan) {
+    private lazy val conf = this
 
-    /**
-     * Sets the host name
-     */
-    def host(host: String): ServerConfiguration = {
-      this.copy(host = host)
-    }
-
-    /**
-     * Sets the port
-     */
-    def port(port: Int): ServerConfiguration = {
-      this.copy(port = port)
-    }
-
-    /**
-     * Enables CORS and sets the allowed origin
-     */
-    def corsOrigin(origin: String): ServerConfiguration = {
-      this.copy(corsOrigin = Option(origin))
-    }
-
-    /**
-     * Enables or disables request logging
-     */
-    def logRequests(enabled: Boolean): ServerConfiguration = {
-      this.copy(logRequests = enabled)
-    }
-
-    /**
-     * Enables serving of static files, either from the classpath or an external location
-     */
-    def staticFiles(from: StaticFileLocation, path: String): ServerConfiguration = {
-      this.copy(staticFiles = Some(StaticFilesConfiguration(from, path)))
-    }
-
-    /**
-     * Enables SSL over HTTPS
-     */
-    def secure(keystoreFilePath: String, keystorePassword: String, truststoreFilePath: String, truststorePassword: String): ServerConfiguration = {
-      this.copy(
-        scheme = "https",
-        ssl = Some(SslConfiguration(keystoreFilePath, keystorePassword, truststoreFilePath, truststorePassword))
-      )
-    }
-
-    /**
-     * Registers an object with the server under a parent class.
-     * Registered objects are available to all server components using `the[Class]` and `all[Class]` methods.
-     */
-    def registerUnder[CLASS: ClassTag, OBJECT <: CLASS](obj: OBJECT)(implicit classTag: ClassTag[CLASS]): ServerConfiguration = {
-      val clazz = classTag.runtimeClass
-      if (!registry.containsKey(clazz)) {
-        registry.put(clazz, new util.LinkedHashSet[CLASS]())
-      }
-      registry.get(clazz).asInstanceOf[util.Set[CLASS]].add(obj)
-      this
-    }
-
-    /**
-     * Registers an object with the server.
-     * Registered objects are available to all server components using `the[Class]` and `all[Class]` methods.
-     */
-    def register[CLASS: ClassTag](obj: CLASS)(implicit classTag: ClassTag[CLASS]): ServerConfiguration = {
-      val clazz = classTag.runtimeClass
-      if (!registry.containsKey(clazz)) {
-        registry.put(clazz, new util.LinkedHashSet[CLASS]())
-      }
-      registry.get(clazz).asInstanceOf[util.Set[CLASS]].add(obj)
-      this
-    }
-
-    /**
-     * Executes the hook after the server successfully starts up
-     */
-    def startupHook(hook: () => Unit): ServerConfiguration = {
-      this.copy(startupHook = hook)
-    }
-
-    /**
-     * Builds and starts the server
-     */
-    def start(): Server = {
+    override def start(): Server = {
       val server =
         new Server {
           override protected val autoScanPackage: String = conf.autoScan
@@ -135,6 +44,7 @@ object Server {
       server.start()
       server
     }
+
   }
 }
 
@@ -142,7 +52,7 @@ object Server {
  * A simple web server
  */
 trait Server {
-  private val log: Logger = LoggerFactory.getLogger(this.getClass)
+  protected val log: Logger = LoggerFactory.getLogger(this.getClass)
 
   protected val autoScanPackage: String
   protected val scheme: String
@@ -164,6 +74,7 @@ trait Server {
     registerFilters()
     registerExceptionHandlers()
     registerControllers()
+    afterControllersRegistered()
     register404Handler()
     registerComponents()
 
@@ -220,8 +131,8 @@ trait Server {
           controller.register()
           controller.endpointRegistry.map { endpoint =>
             Seq(
-              endpoint.method.toString,
-              endpoint.path,
+              endpoint.webMethod.method.toString,
+              endpoint.webMethod.path,
               controller.getClass.getName.replaceAllLiterally("$", "")
             )
           }
@@ -315,14 +226,22 @@ trait Server {
   }
 
   /**
-   * Lifecycle hook which enables the execution of arbitrary code after the
-   * server starts up successfully.
+   * Lifecycle hook which enables the execution or arbitrary code after
+   * the server has registered all controllers
    */
-  protected def onStartup() : Unit = {
+  protected def afterControllersRegistered(): Unit = {
 
   }
 
-  private def logTable(columns: Seq[String], rows: Seq[Seq[String]]): Unit = {
+  /**
+   * Lifecycle hook which enables the execution of arbitrary code after the
+   * server starts up successfully.
+   */
+  protected def onStartup(): Unit = {
+
+  }
+
+  protected def logTable(columns: Seq[String], rows: Seq[Seq[String]]): Unit = {
     if (rows.isEmpty) {
       log.info("    [NONE]")
     }

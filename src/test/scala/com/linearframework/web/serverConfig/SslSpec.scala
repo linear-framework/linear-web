@@ -12,7 +12,7 @@ class SslSpec extends RestSpec {
     file.getAbsolutePath
   }
 
-  override protected val conf: Server.ServerConfiguration =
+  override protected val conf: Server.Configuration =
     Server
       .autoScan("com.linearframework.hello")
       .secure(

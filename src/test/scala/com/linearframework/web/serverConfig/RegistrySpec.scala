@@ -4,7 +4,7 @@ import com.linearframework.web.{RestSpec, _}
 
 class RegistrySpec extends RestSpec {
 
-  override protected val conf: Server.ServerConfiguration =
+  override protected val conf: Server.Configuration =
     Server.autoScan("com.linearframework.hello")
       .register[String]("hello")
       .register[String]("world")

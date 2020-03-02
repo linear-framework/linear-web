@@ -4,7 +4,7 @@ import com.linearframework.app.App
 import java.io.IOException
 
 class ComponentsTest extends RestSpec {
-  override protected val conf: Server.ServerConfiguration = Server.autoScan("com.linearframework.app").logRequests(true)
+  override protected val conf: Server.Configuration = Server.autoScan("com.linearframework.app").logRequests(true)
 
   "Before filters and exception handlers" should "apply" in {
     App.getSecureCount should be (0)

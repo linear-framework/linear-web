@@ -5,7 +5,7 @@ import java.io.{FileNotFoundException, IOException}
 
 class DefaultsSpec extends RestSpec {
 
-  override protected val conf: Server.ServerConfiguration =
+  override protected val conf: Server.Configuration =
     Server.autoScan("com.linearframework.hello")
 
   "Default server configuration" should "be applicable to simple use cases" in {
