@@ -210,8 +210,8 @@ private[web] class RequestImpl private[web](private val inner: spark.Request) ex
       .split("&")
       .map { pair =>
         val parts = pair.split("=")
-        val left = URLDecoder.decode(parts(0), StandardCharsets.UTF_8.toString)
-        val right = URLDecoder.decode(parts(1), StandardCharsets.UTF_8.toString)
+        val left = URLDecoder.decode(Option(parts(0)).getOrElse(""), StandardCharsets.UTF_8.toString)
+        val right = URLDecoder.decode(Option(parts(1)).getOrElse(""), StandardCharsets.UTF_8.toString)
         left -> right
       }
       .toList
