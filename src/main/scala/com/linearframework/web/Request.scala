@@ -1,6 +1,8 @@
 package com.linearframework.web
 
 import javax.servlet.http.HttpServletRequest
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import scala.jdk.CollectionConverters._
 
 /**
@@ -43,6 +45,11 @@ trait Request {
    * Gets the request body as a byte array
    */
   def getBodyAsBytes: Array[Byte]
+
+  /**
+   * Gets the request body, parsed as form-url-encoded, as name/value pairs
+   */
+  def getBodyAsForm: List[(String, String)]
 
   /**
    * Gets the IP address of the client making the request
@@ -197,6 +204,18 @@ private[web] class RequestImpl private[web](private val inner: spark.Request) ex
   override def getBody: String = inner.body()
 
   override def getBodyAsBytes: Array[Byte] = inner.bodyAsBytes()
+
+  override def getBodyAsForm: List[(String, String)] = {
+    getBody
+      .split("&")
+      .map { pair =>
+        val parts = pair.split("=")
+        val left = URLDecoder.decode(parts(0), StandardCharsets.UTF_8.toString)
+        val right = URLDecoder.decode(parts(1), StandardCharsets.UTF_8.toString)
+        left -> right
+      }
+      .toList
+  }
 
   override def getClientIP: String = inner.ip()
 
