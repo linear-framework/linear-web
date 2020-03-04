@@ -1,6 +1,7 @@
 package com.linearframework.web
 
 import javax.servlet.http.HttpServletRequest
+import java.util.Locale
 import scala.jdk.CollectionConverters._
 import scala.reflect.ClassTag
 
@@ -192,6 +193,11 @@ trait Request {
   def getSession: Session
 
   /**
+   * Gets the locale of the request
+   */
+  def getLocale: Locale
+
+  /**
    * Returns the underlying [[javax.servlet.http.HttpServletRequest]]
    */
   def raw(): HttpServletRequest
@@ -276,6 +282,8 @@ private[web] class RequestImpl private[web](private val inner: spark.Request, pr
   override def getUserAgent: Option[String] = Option(inner.userAgent())
 
   override def getSession: Session = new SessionImpl(inner.session(true))
+
+  override def getLocale: Locale = raw().getLocale
 
   override def raw(): HttpServletRequest = inner.raw()
 
