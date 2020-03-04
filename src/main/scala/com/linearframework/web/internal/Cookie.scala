@@ -9,7 +9,7 @@ private[web] class Cookie (
   value: String,
   maxAge: Option[Int] = None,
   expires: Option[ZonedDateTime] = None,
-  secured: Option[Boolean] = None,
+  secure: Option[Boolean] = None,
   httpOnly: Option[Boolean] = None,
   sameSite: Option[SameSite] = None,
   domain: Option[String] = None,
@@ -34,8 +34,8 @@ private[web] class Cookie (
           }
       },
 
-      secured match {
-        case Some(true) => "Secured"
+      secure match {
+        case Some(true) => "Secure"
         case _ => ""
       },
 

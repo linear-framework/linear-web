@@ -59,7 +59,7 @@ trait Response {
    * @param value    value of the cookie
    * @param maxAge   max age of the cookie in seconds
    * @param expires  the expiration date of the cookie (if both maxAge and expires are provided, only maxAge will be used)
-   * @param secured  if true: cookie will be secured
+   * @param secure  if true: cookie will be secured
    * @param httpOnly if true: cookie will be marked as http only
    * @param sameSite provides browser-based XSRF protection if enabled
    * @param domain   domain of the cookie
@@ -70,7 +70,7 @@ trait Response {
     value: String,
     maxAge: Int = -1,
     expires: ZonedDateTime = null,
-    secured: Boolean = false,
+    secure: Boolean = false,
     httpOnly: Boolean = false,
     sameSite: SameSite = null,
     domain: String = null,
@@ -111,7 +111,7 @@ private[web] class ResponseImpl private[web](private val inner: spark.Response) 
 
   override def raw: HttpServletResponse = inner.raw()
 
-  override def setCookie(name: String, value: String, maxAge: Int, expires: ZonedDateTime, secured: Boolean, httpOnly: Boolean, sameSite: SameSite, domain: String, path: String): Unit = {
+  override def setCookie(name: String, value: String, maxAge: Int, expires: ZonedDateTime, secure: Boolean, httpOnly: Boolean, sameSite: SameSite, domain: String, path: String): Unit = {
     inner.header(
       "Set-Cookie",
       new Cookie(
@@ -119,7 +119,7 @@ private[web] class ResponseImpl private[web](private val inner: spark.Response) 
         value,
         Option(maxAge),
         Option(expires),
-        Option(secured),
+        Option(secure),
         Option(httpOnly),
         Option(sameSite),
         Option(domain),

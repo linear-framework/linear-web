@@ -14,8 +14,8 @@ class CookieSpec extends BaseSpec {
     new Cookie("name", "value").toString should be ("name=value")
     new Cookie("name", "value", maxAge = Some(60)).toString should be ("name=value; Max-Age=60")
     new Cookie("name", "value", expires = Some(now)).toString should be (s"name=value; Expires=$nowStr")
-    new Cookie("name", "value", secured = Some(false)).toString should be (s"name=value")
-    new Cookie("name", "value", secured = Some(true)).toString should be (s"name=value; Secured")
+    new Cookie("name", "value", secure = Some(false)).toString should be (s"name=value")
+    new Cookie("name", "value", secure = Some(true)).toString should be (s"name=value; Secure")
     new Cookie("name", "value", httpOnly = Some(false)).toString should be (s"name=value")
     new Cookie("name", "value", httpOnly = Some(true)).toString should be (s"name=value; HttpOnly")
     new Cookie("name", "value", sameSite = Some(SameSite.LAX)).toString should be (s"name=value; SameSite=Lax")
@@ -28,12 +28,12 @@ class CookieSpec extends BaseSpec {
       "name",
       "value",
       maxAge = Some(60),
-      secured = Some(true),
+      secure = Some(true),
       httpOnly = Some(true),
       sameSite = Some(SameSite.STRICT),
       domain = Some("example.com"),
       path = Some("/app/path")
-    ).toString should be (s"name=value; Max-Age=60; Secured; HttpOnly; SameSite=Strict; Domain=example.com; Path=/app/path")
+    ).toString should be (s"name=value; Max-Age=60; Secure; HttpOnly; SameSite=Strict; Domain=example.com; Path=/app/path")
   }
 
   "If MaxAge and Expires are both provided, only MaxAge" should "be in the cookie" in {
