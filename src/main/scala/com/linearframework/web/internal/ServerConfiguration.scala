@@ -71,7 +71,7 @@ private[web] abstract class ServerConfiguration(
   /**
    * Enables SSL over HTTPS
    */
-  def secure(keystoreFilePath: String, keystorePassword: String, truststoreFilePath: String, truststorePassword: String): this.type = {
+  def secure(keystoreFilePath: String, keystorePassword: String, truststoreFilePath: String = null, truststorePassword: String = null): this.type = {
     this.scheme = "https"
     this.ssl = Some(SslConfiguration(keystoreFilePath, keystorePassword, truststoreFilePath, truststorePassword))
     this
