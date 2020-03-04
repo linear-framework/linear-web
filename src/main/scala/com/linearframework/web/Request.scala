@@ -184,6 +184,11 @@ trait Request {
   def getUserAgent: Option[String]
 
   /**
+   * Gets the session associated with this request, creating one if it does not already exist
+   */
+  def getSession: Session
+
+  /**
    * Returns the underlying [[javax.servlet.http.HttpServletRequest]]
    */
   def raw(): HttpServletRequest
@@ -264,6 +269,8 @@ private[web] class RequestImpl private[web](private val inner: spark.Request) ex
   override def getUrl: String = inner.url()
 
   override def getUserAgent: Option[String] = Option(inner.userAgent())
+
+  override def getSession: Session = new SessionImpl(inner.session(true))
 
   override def raw(): HttpServletRequest = inner.raw()
 
