@@ -88,7 +88,7 @@ trait Response {
    * @param url the location of the redirect
    * @param status the status to use (must be a 3XX status)
    */
-  def redirect(url: String, status: HttpStatus = FOUND): Unit
+  def redirect(url: String, status: HttpStatus = FOUND): String
 
 }
 
@@ -149,10 +149,11 @@ private[web] class ResponseImpl private[web](private val inner: spark.Response) 
    * Redirects to the given URL with the given status
    * @param url the url to redi
    */
-  override def redirect(url: String, status: HttpStatus): Unit = {
+  override def redirect(url: String, status: HttpStatus): String = {
     if (!status.isRedirection) {
       throw new IllegalArgumentException(s"Redirects must be given a 3XX status. Found: ${status.code} (${status.reason}).")
     }
     inner.redirect(url, status.code)
+    s"redirect:$url"
   }
 }
