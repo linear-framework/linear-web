@@ -4,6 +4,7 @@ import com.linearframework.web.RequestBodyDeserializer
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import scala.reflect.ClassTag
+import scala.util.Try
 
 private[web] object FormUrlEncodedBodyDeserializer extends RequestBodyDeserializer {
 
@@ -14,8 +15,8 @@ private[web] object FormUrlEncodedBodyDeserializer extends RequestBodyDeserializ
       body.split("&")
         .map { pair =>
           val parts = pair.split("=")
-          val left = URLDecoder.decode(Option(parts(0)).getOrElse(""), StandardCharsets.UTF_8.toString)
-          val right = URLDecoder.decode(Option(parts(1)).getOrElse(""), StandardCharsets.UTF_8.toString)
+          val left = URLDecoder.decode(Try(Option(parts(0)).getOrElse("")).getOrElse(""), StandardCharsets.UTF_8.toString)
+          val right = URLDecoder.decode(Try(Option(parts(1)).getOrElse("")).getOrElse(""), StandardCharsets.UTF_8.toString)
           left -> right
         }
         .toMap
