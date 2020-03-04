@@ -48,7 +48,7 @@ trait Filter extends ServerRegistrant {
     super.register()
     filterRegistry.foreach { filter =>
       val sparkFilter: spark.Filter = (request: spark.Request, response: spark.Response) => {
-        val req = new RequestImpl(request)
+        val req = new RequestImpl(request, deserializers)
         val res = new ResponseImpl(response)
         filter.handler(req, res)
       }

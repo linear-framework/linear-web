@@ -24,7 +24,7 @@ trait NotFoundHandler extends ServerRegistrant {
 
   private lazy val route: spark.Route = {
     (request: spark.Request, response: spark.Response) => {
-      val req = new RequestImpl(request)
+      val req = new RequestImpl(request, deserializers)
       val res = new ResponseImpl(response)
       res.setStatus(NOT_FOUND)
       apply(req, res)

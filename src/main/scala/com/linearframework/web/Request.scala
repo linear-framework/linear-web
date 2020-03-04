@@ -1,14 +1,22 @@
 package com.linearframework.web
 
 import javax.servlet.http.HttpServletRequest
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
 import scala.jdk.CollectionConverters._
+import scala.reflect.ClassTag
 
 /**
  * Represents a REST HTTP request
  */
 trait Request {
+
+  /**
+   * Converts the body of the request to an instance of type T.
+   * The conversion is dependent on the content type set on the request.
+   * The content types XML, JSON, and FORM_DATA are supported.  Other content
+   * types may raise an exception.
+   * @tparam T a case class
+   */
+  def as[T <: Product with Serializable](implicit classtag: ClassTag[T]): T
 
   /**
    * Gets the names of all attributes on the request
@@ -45,11 +53,6 @@ trait Request {
    * Gets the request body as a byte array
    */
   def getBodyAsBytes: Array[Byte]
-
-  /**
-   * Gets the request body, parsed as form-url-encoded, as name/value pairs
-   */
-  def getBodyAsForm: List[(String, String)]
 
   /**
    * Gets the IP address of the client making the request
@@ -196,7 +199,21 @@ trait Request {
 }
 
 
-private[web] class RequestImpl private[web](private val inner: spark.Request) extends Request {
+private[web] class RequestImpl private[web](private val inner: spark.Request, private val deserializers: Map[ContentType, RequestBodyDeserializer]) extends Request {
+
+  override def as[T <: Product with Serializable](implicit classTag: ClassTag[T]): T = {
+    getContentType match {
+      case Some(contentType) =>
+        deserializers.get(contentType) match {
+          case Some(deserialize) =>
+            deserialize(getBody)
+          case None =>
+            throw new IllegalStateException(s"No deserializer is available for content type [$contentType]")
+        }
+      case None =>
+        throw new IllegalStateException("Request is missing Content-Type header; cannot deserialize to object.")
+    }
+  }
 
   override def getAttributeNames: Set[String] = inner.attributes().asScala.toSet
 
@@ -209,18 +226,6 @@ private[web] class RequestImpl private[web](private val inner: spark.Request) ex
   override def getBody: String = inner.body()
 
   override def getBodyAsBytes: Array[Byte] = inner.bodyAsBytes()
-
-  override def getBodyAsForm: List[(String, String)] = {
-    getBody
-      .split("&")
-      .map { pair =>
-        val parts = pair.split("=")
-        val left = URLDecoder.decode(Option(parts(0)).getOrElse(""), StandardCharsets.UTF_8.toString)
-        val right = URLDecoder.decode(Option(parts(1)).getOrElse(""), StandardCharsets.UTF_8.toString)
-        left -> right
-      }
-      .toList
-  }
 
   override def getClientIP: String = inner.ip()
 

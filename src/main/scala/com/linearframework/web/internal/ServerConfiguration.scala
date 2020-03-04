@@ -1,6 +1,6 @@
 package com.linearframework.web.internal
 
-import com.linearframework.web.{Server, StaticFileLocation}
+import com.linearframework.web._
 import java.util
 import scala.reflect.ClassTag
 
@@ -17,7 +17,15 @@ private[web] abstract class ServerConfiguration(
   protected var staticFiles: Option[StaticFilesConfiguration] = None,
   protected var ssl: Option[SslConfiguration] = None,
   protected var registry: util.Map[Class[_], util.Set[_]] = new util.HashMap[Class[_], util.Set[_]](),
-  protected var startupHook: () => Unit = () => { }
+  protected var startupHook: () => Unit = () => { },
+  protected var deserializers: util.Map[ContentType, RequestBodyDeserializer] = {
+    val map = new util.HashMap[ContentType, RequestBodyDeserializer]()
+    map.put(JSON, JacksonJsonRequestBodyDeserializer)
+    map.put(XML, JacksonXmlRequestBodyDeserializer)
+    map.put(APPLICATION_XML, JacksonXmlRequestBodyDeserializer)
+    map.put(FORM_DATA, FormUrlEncodedBodyDeserializer)
+    map
+  }
 ) {
 
   /**
@@ -66,6 +74,14 @@ private[web] abstract class ServerConfiguration(
   def secure(keystoreFilePath: String, keystorePassword: String, truststoreFilePath: String, truststorePassword: String): this.type = {
     this.scheme = "https"
     this.ssl = Some(SslConfiguration(keystoreFilePath, keystorePassword, truststoreFilePath, truststorePassword))
+    this
+  }
+
+  /**
+   * Adds (or overrides) a deserializer for the given content type.
+   */
+  def setDeserializer(contentType: ContentType, deserializer: RequestBodyDeserializer): this.type = {
+    deserializers.put(contentType, deserializer)
     this
   }
 

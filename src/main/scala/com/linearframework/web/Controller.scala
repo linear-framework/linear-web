@@ -55,7 +55,7 @@ trait Controller extends ServerRegistrant {
     super.register()
     endpointRegistry.foreach { endpoint =>
       val route: spark.Route = (request: spark.Request, response: spark.Response) => {
-        val req = new RequestImpl(request)
+        val req = new RequestImpl(request, deserializers)
         val res = new ResponseImpl(response)
         val result = endpoint.handler(req, res).asInstanceOf[AnyRef]
         endpoint.transformer(result, res)

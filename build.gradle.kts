@@ -22,6 +22,8 @@ dependencies {
 
   api("com.sparkjava:spark-core:2.9.1")
   api("org.reflections:reflections:0.9.11")
+  api("com.fasterxml.jackson.module:jackson-module-scala_2.13:2.10.3")
+  api("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.3")
 
   testImplementation("junit:junit:4.13")
   testImplementation("org.scalatest:scalatest_2.13:3.1.1")

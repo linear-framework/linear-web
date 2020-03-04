@@ -26,7 +26,7 @@ trait ExceptionHandler[T <: Exception] extends ServerRegistrant {
 
   private lazy val handler: spark.ExceptionHandler[T] = {
     (exception: T, request: spark.Request, response: spark.Response) => {
-      val req = new RequestImpl(request)
+      val req = new RequestImpl(request, deserializers)
       val res = new ResponseImpl(response)
       apply(exception, req, res)
     }

@@ -2,8 +2,9 @@ package com.linearframework.hello
 
 import com.linearframework.web._
 import scala.util.Try
+import scala.util.control.NonFatal
 
-case class ErrorRequestBody(name: String, age: Int)
+case class Person(name: String, age: Int)
 
 object HelloController extends Controller {
 
@@ -35,6 +36,15 @@ object HelloController extends Controller {
 
   GET("/registered/one") { (_, _) =>
     Try(the[String]).getOrElse("")
+  }
+
+  PUT("/person") { (request, _) =>
+    try {
+      request.as[Person].toString
+    }
+    catch {
+      case NonFatal(e) => e.getMessage
+    }
   }
 
 }

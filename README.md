@@ -59,6 +59,11 @@ object App {
        //              - an absolute EXTERNAL path on the filesystem
        //            defaults to blocking static file hosting 
       .staticFiles(CLASSPATH, "public/")
+
+       // (optional) adds a custom deserializer to the server;
+       //            by default, the server supports JSON, XML, and Form-URLEncoded deserializers;
+       //            this can be called multiple times to add multiple deserializers
+      .setDeserializer(JSON, MyJsonDeserialzer)
       
        // (optional) enables SSL over HTTPS with the given keystore and truststore;
        //            defaults to standard HTTP
@@ -102,8 +107,10 @@ object UserController extends Controller {
     user
   }
   
-  POST("/api/users/:userId") { (request, response) =>
-    ...
+  POST("/api/users") { (request, response) =>
+    val form = request.as[CreateUserForm]
+    UserService.createUser(form.username, form.password)
+    "OK"
   }
   
   ...
@@ -115,6 +122,10 @@ Supported request methods are `GET`, `POST`, `PUT`, `DELETE`, `HEAD`, `TRACE`, `
 
 The return value of each endpoint will automatically be placed in the body of the response.  For
 more granular control over how the response is built, you can manipulate `response` directly.
+
+The body of a request can automatically be deserialized into a case class instance using `.as[MyClass]`. 
+By default, the `Server` supports JSON, XML and Form-URLEncoded deserialization.  Custom deserializers 
+can be added when configuring the server.
 
 Reminder: for auto-configuration to work, all `Controller` implementations must be top-level Scala objects.
 

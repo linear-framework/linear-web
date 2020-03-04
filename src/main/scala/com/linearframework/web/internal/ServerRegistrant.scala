@@ -1,14 +1,16 @@
 package com.linearframework.web.internal
 
-import com.linearframework.web.Server
+import com.linearframework.web.{ContentType, RequestBodyDeserializer, Server}
 import scala.jdk.CollectionConverters._
 import scala.reflect.ClassTag
 
 private[web] trait ServerRegistrant {
   private var server: Server = _
+  private[web] var deserializers: Map[ContentType, RequestBodyDeserializer] = Map()
 
   private[web] final def setServer(server: Server): Unit = {
     this.server = server
+    this.deserializers = server.deserializers.asScala.toMap
   }
 
   private[web] def register(): Unit = {

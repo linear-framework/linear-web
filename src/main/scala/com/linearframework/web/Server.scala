@@ -40,6 +40,7 @@ object Server {
           override protected val staticFiles: Option[StaticFilesConfiguration] = conf.staticFiles
           override protected val ssl: Option[SslConfiguration] = conf.ssl
           override private[web] val registry = conf.registry
+          override private[web] val deserializers: util.Map[ContentType, RequestBodyDeserializer] = conf.deserializers
         }
       server.start()
       server
@@ -63,6 +64,7 @@ trait Server {
   protected val staticFiles: Option[StaticFilesConfiguration]
   protected val ssl: Option[SslConfiguration]
   private[web] val registry: util.Map[Class[_], util.Set[_]]
+  private[web] val deserializers: util.Map[ContentType, RequestBodyDeserializer]
 
   /**
    * Starts this server
