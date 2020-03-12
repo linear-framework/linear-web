@@ -1,7 +1,6 @@
 package com.linearframework.web.serverConfig
 
 import com.linearframework.web.{RestSpec, Server}
-import java.net.SocketTimeoutException
 
 class ConfigurePortSpec extends RestSpec {
 
@@ -11,7 +10,7 @@ class ConfigurePortSpec extends RestSpec {
       .port(5678)
 
   "Server port" should "be customizable" in {
-    a [SocketTimeoutException] should be thrownBy {
+    an [Exception] should be thrownBy {
       get("http://localhost:4567/hello")
     }
 
