@@ -135,7 +135,7 @@ trait Server {
             Seq(
               endpoint.webMethod.method.toString,
               endpoint.webMethod.path,
-              controller.getClass.getName.replaceAllLiterally("$", "")
+              controller.getClass.getName.replace("$", "")
             )
           }
         })
@@ -164,7 +164,7 @@ trait Server {
           Seq(
             method.method.toString,
             if (method.path == SparkUtils.ALL_PATHS) "*" else method.path,
-            filter.getClass.getName.replaceAllLiterally("$", "")
+            filter.getClass.getName.replace("$", "")
           )
         }
       })
@@ -185,8 +185,8 @@ trait Server {
         handler.setServer(this)
         handler.register()
         Seq(
-          handler.exceptionClass.getName.replaceAllLiterally("$", ""),
-          handler.getClass.getName.replaceAllLiterally("$", "")
+          handler.exceptionClass.getName.replace("$", ""),
+          handler.getClass.getName.replace("$", "")
         )
       })
 
@@ -208,7 +208,7 @@ trait Server {
     handler.register()
 
     log.info(s"Registered 404 Handler:")
-    logTable(Seq("HANDLER"), Seq(Seq(s"${handler.getClass.getName.replaceAllLiterally("$", "")}")))
+    logTable(Seq("HANDLER"), Seq(Seq(s"${handler.getClass.getName.replace("$", "")}")))
   }
 
   private def registerComponents(): Unit = {
@@ -219,7 +219,7 @@ trait Server {
         component.setServer(this)
         component.register()
         Seq(
-          component.getClass.getName.replaceAllLiterally("$", "")
+          component.getClass.getName.replace("$", "")
         )
       })
 

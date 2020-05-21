@@ -17,17 +17,17 @@ repositories {
 }
 
 dependencies {
-  implementation("org.scala-lang:scala-library:2.13.1")
-  implementation("org.scala-lang:scala-reflect:2.13.1")
+  implementation("org.scala-lang:scala-library:2.13.2")
+  implementation("org.scala-lang:scala-reflect:2.13.2")
 
   api("com.sparkjava:spark-core:2.9.1")
-  api("org.reflections:reflections:0.9.11")
-  api("com.fasterxml.jackson.module:jackson-module-scala_2.13:2.10.3")
-  api("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.3")
+  api("org.reflections:reflections:0.9.12")
+  api("com.fasterxml.jackson.module:jackson-module-scala_2.13:2.11.0")
+  api("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.0")
 
   testImplementation("junit:junit:4.13")
-  testImplementation("org.scalatest:scalatest_2.13:3.1.1")
-  testImplementation("org.scalatestplus:junit-4-12_2.13:3.1.1.0")
+  testImplementation("org.scalatest:scalatest_2.13:3.1.2")
+  testImplementation("org.scalatestplus:junit-4-12_2.13:3.1.2.0")
   testImplementation("com.google.code.gson:gson:2.8.6")
 
   testRuntimeOnly("org.slf4j:slf4j-simple:1.7.25")

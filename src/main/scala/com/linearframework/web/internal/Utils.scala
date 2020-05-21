@@ -16,7 +16,7 @@ private[web] object Utils {
       .toSeq
       .filterNot(_.isInterface)
       .filterNot(subClass => Modifier.isAbstract(subClass.getModifiers))
-      .map(_.getName.replaceAllLiterally("$", ""))
+      .map(_.getName.replace("$", ""))
       .map { objectName =>
         val module = mirror.staticModule(objectName)
         mirror.reflectModule(module).instance.asInstanceOf[T]
