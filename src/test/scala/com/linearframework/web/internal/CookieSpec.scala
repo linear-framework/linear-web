@@ -2,18 +2,20 @@ package com.linearframework.web.internal
 
 import com.linearframework.BaseSpec
 import com.linearframework.web.SameSite
-import java.time.ZonedDateTime
+import java.time.{ZoneOffset, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 
 class CookieSpec extends BaseSpec {
 
   "Cookie objects" can "be converted to Set-Cookie strings" in {
     val now = ZonedDateTime.now()
-    val nowStr = now.format(DateTimeFormatter.RFC_1123_DATE_TIME)
+    val nowUtc = ZonedDateTime.now(ZoneOffset.UTC)
+    val nowUtcStr = nowUtc.format(DateTimeFormatter.RFC_1123_DATE_TIME)
 
     new Cookie("name", "value").toString should be ("name=value")
     new Cookie("name", "value", maxAge = Some(60)).toString should be ("name=value; Max-Age=60")
-    new Cookie("name", "value", expires = Some(now)).toString should be (s"name=value; Expires=$nowStr")
+    new Cookie("name", "value", expires = Some(now)).toString should be (s"name=value; Expires=$nowUtcStr")
+    new Cookie("name", "value", expires = Some(nowUtc)).toString should be (s"name=value; Expires=$nowUtcStr")
     new Cookie("name", "value", secure = Some(false)).toString should be (s"name=value")
     new Cookie("name", "value", secure = Some(true)).toString should be (s"name=value; Secure")
     new Cookie("name", "value", httpOnly = Some(false)).toString should be (s"name=value")

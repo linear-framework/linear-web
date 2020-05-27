@@ -1,7 +1,7 @@
 package com.linearframework.web.internal
 
 import com.linearframework.web.SameSite
-import java.time.ZonedDateTime
+import java.time.{LocalDateTime, OffsetDateTime, ZoneOffset, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 
 private[web] class Cookie (
@@ -29,8 +29,13 @@ private[web] class Cookie (
         case Some(age) if age != 0 => s"Max-Age=$age"
         case None =>
           expires match {
-            case Some(date) => s"Expires=${date.format(DateTimeFormatter.RFC_1123_DATE_TIME)}"
-            case None => ""
+            case Some(date) =>
+              val formatted = DateTimeFormatter.RFC_1123_DATE_TIME.format(date)
+              val parsed = OffsetDateTime.parse(formatted, DateTimeFormatter.RFC_1123_DATE_TIME)
+              val utc = parsed.atZoneSameInstant(ZoneOffset.UTC)
+              s"Expires=${utc.format(DateTimeFormatter.RFC_1123_DATE_TIME)}"
+            case None =>
+              ""
           }
       },
 
